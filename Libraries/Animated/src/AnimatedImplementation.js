@@ -23,10 +23,25 @@ var flattenStyle = require('flattenStyle');
 var invariant = require('invariant');
 var requestAnimationFrame = require('requestAnimationFrame');
 
+var CSSPropertyOperations = require('CSSPropertyOperations');
+
 import type { InterpolationConfigType } from 'Interpolation';
 
 type EndResult = {finished: bool};
 type EndCallback = (result: EndResult) => void;
+
+function flattenTransform(transforms) {
+  if (!transforms) return '';
+
+  return transforms.map(transform => {
+      var result = '';
+      for (var key in transform) {
+        var value = transform[key];
+        result += key + '(' + value + ')';
+      }
+      return result;
+    }).join(' ');
+}
 
 // Note(vjeux): this would be better as an interface but flow doesn't
 // support them yet
@@ -1116,6 +1131,13 @@ function createAnimatedComponent(Component: any): any {
         if (this.refs[refName].setNativeProps) {
           var value = this._propsAnimated.__getAnimatedValue();
           this.refs[refName].setNativeProps(value);
+        } else if (this.refs[refName].getDOMNode().setAttribute) {
+          var value = this._propsAnimated.__getAnimatedValue();
+          var style = value.style;
+          var strStyle = CSSPropertyOperations.setValueForStyles(this.refs[refName].getDOMNode(), {
+            ...flattenStyle(value.style),
+            transform: flattenTransform(style && style.transform)
+          }, this.refs[refName]);
         } else {
           this.forceUpdate();
         }

@@ -161,12 +161,18 @@ static void RCTUpdatePlaceholder(RCTTextField *self)
 
 - (void)textFieldDidChange
 {
+  UITextRange *selection = self.selectedTextRange;
+  NSInteger start = [self offsetFromPosition:self.beginningOfDocument toPosition:selection.start];
+  NSInteger end = [self offsetFromPosition:self.beginningOfDocument toPosition:selection.end];
+
   _nativeEventCount++;
-  [_eventDispatcher sendTextEventWithType:RCTTextEventTypeChange
+  [_eventDispatcher sendTextEventWithTypeAndSelection:RCTTextEventTypeChange
                                  reactTag:self.reactTag
                                      text:self.text
                                       key:nil
-                               eventCount:_nativeEventCount];
+                               eventCount:_nativeEventCount
+                           selectionStart: start
+                             selectionEnd: end];
 
   // selectedTextRange observer isn't triggered when you type even though the
   // cursor position moves, so we send event again here.

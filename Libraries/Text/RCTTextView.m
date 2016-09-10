@@ -608,10 +608,20 @@ static BOOL findMismatch(NSString *first, NSString *second, NSRange *firstRange,
   if (textLength >= _previousTextLength) {
     contentHeight = MAX(contentHeight, _previousContentHeight);
   }
+  
+  
+  UITextRange *selection = _textView.selectedTextRange;
+  NSInteger start = [_textView offsetFromPosition:[_textView beginningOfDocument] toPosition:selection.start];
+  NSInteger end = [_textView offsetFromPosition:[_textView beginningOfDocument] toPosition:selection.end];
+  
   _previousTextLength = textLength;
   _previousContentHeight = contentHeight;
   _onChange(@{
     @"text": self.text,
+    @"selection": @{
+        @"start": @(start),
+        @"end": @(end),
+    },
     @"contentSize": @{
       @"height": @(contentHeight),
       @"width": @(textView.contentSize.width)

@@ -612,7 +612,7 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextChanged(CharSequence s, int start, int before, int count, int selectionStart, int selectionEnd) {
       // Rearranging the text (i.e. changing between singleline and multiline attributes) can
       // also trigger onTextChanged, call the event in JS only when the text actually changed
       if (count == 0 && before == 0) {
@@ -647,7 +647,9 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
               s.toString(),
               PixelUtil.toDIPFromPixel(contentWidth),
               PixelUtil.toDIPFromPixel(contentHeight),
-              mEditText.incrementAndGetEventCounter()));
+              mEditText.incrementAndGetEventCounter(),
+              selectionStart,
+              selectionEnd));
 
       mEventDispatcher.dispatchEvent(
           new ReactTextInputEvent(

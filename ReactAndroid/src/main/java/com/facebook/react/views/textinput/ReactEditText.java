@@ -547,7 +547,7 @@ public class ReactEditText extends EditText {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
       if (!mIsSettingTextFromJS && mListeners != null) {
         for (TextWatcher listener : mListeners) {
-          listener.onTextChanged(s, start, before, count);
+          listener.onTextChanged(s, start, before, count, getSelectionStart(), getSelectionEnd());
         }
       }
     }

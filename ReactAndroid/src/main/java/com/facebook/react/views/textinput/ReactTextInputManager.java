@@ -642,7 +642,7 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
       // The event that contains the event counter and updates it must be sent first.
       // TODO: t7936714 merge these events
       mEventDispatcher.dispatchEvent(
-          new ReactTextChangedEvent(
+          new ReactTextChangedEventSelection(
               mEditText.getId(),
               s.toString(),
               PixelUtil.toDIPFromPixel(contentWidth),

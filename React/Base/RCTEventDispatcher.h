@@ -84,6 +84,16 @@ __deprecated_msg("Use RCTDirectEventBlock or RCTBubblingEventBlock instead");
                          text:(NSString *)text
                           key:(NSString *)key
                    eventCount:(NSInteger)eventCount;
+/**
+ * Send a text input/focus event with a selection. For internal use only.
+ */
+- (void)sendTextEventWithTypeAndSelection:(RCTTextEventType)type
+                     reactTag:(NSNumber *)reactTag
+                         text:(NSString *)text
+                          key:(NSString *)key
+                   eventCount:(NSInteger)eventCount
+               selectionStart:(NSInteger)selectionStart
+                 selectionEnd:(NSInteger)selectionEnd;
 
 /**
  * Send a pre-prepared event object.

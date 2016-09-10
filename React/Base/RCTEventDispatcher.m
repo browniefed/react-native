@@ -138,6 +138,63 @@ RCT_EXPORT_MODULE()
 #pragma clang diagnostic pop
 }
 
+
+- (void)sendTextEventWithTypeAndSelection:(RCTTextEventType)type
+                     reactTag:(NSNumber *)reactTag
+                         text:(NSString *)text
+                          key:(NSString *)key
+                   eventCount:(NSInteger)eventCount
+               selectionStart:(NSInteger)selectionStart
+                 selectionEnd:(NSInteger)selectionEnd
+{
+  static NSString *events[] = {
+    @"focus",
+    @"blur",
+    @"change",
+    @"submitEditing",
+    @"endEditing",
+    @"keyPress"
+  };
+  
+  NSMutableDictionary *body = [[NSMutableDictionary alloc] initWithDictionary:@{
+                                                                                @"eventCount": @(eventCount),
+                                                                                @"target": reactTag
+                                                                                }];
+  
+  if (text) {
+    body[@"text"] = text;
+  }
+  
+  if (selectionStart && selectionEnd) {
+    body[@"selection"] =  @{
+                            @"start": @(selectionStart),
+                            @"end": @(selectionEnd),
+                            };
+  }
+  
+  if (key) {
+    if (key.length == 0) {
+      key = @"Backspace"; // backspace
+    } else {
+      switch ([key characterAtIndex:0]) {
+        case '\t':
+          key = @"Tab";
+          break;
+        case '\n':
+          key = @"Enter";
+        default:
+          break;
+      }
+    }
+    body[@"key"] = key;
+  }
+  
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  [self sendInputEventWithName:events[type] body:body];
+#pragma clang diagnostic pop
+}
+
 - (void)sendEvent:(id<RCTEvent>)event
 {
   [_eventQueueLock lock];

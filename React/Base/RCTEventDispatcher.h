@@ -85,7 +85,7 @@ __deprecated_msg("Use RCTDirectEventBlock or RCTBubblingEventBlock instead");
                           key:(NSString *)key
                    eventCount:(NSInteger)eventCount;
 /**
- * Send a text input/focus event. For internal use only.
+ * Send a text input/focus event with a selection. For internal use only.
  */
 - (void)sendTextEventWithTypeAndSelection:(RCTTextEventType)type
                      reactTag:(NSNumber *)reactTag
